@@ -1,0 +1,7 @@
+{
+  "name": "crypto-trading-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
