@@ -1,6 +1,6 @@
 // API服务 - 用于连接Gin后端
 // 从环境变量获取API地址
-const API_BASE_URL = import.meta.env.API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export interface KlineData {
   symbol: string;
