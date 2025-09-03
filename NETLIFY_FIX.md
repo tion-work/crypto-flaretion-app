@@ -41,6 +41,7 @@ NPM_VERSION = "10"
 - `@types/react`
 - `@types/react-dom`
 - `@testing-library/react`
+- `@types/jest` (用于测试文件的 `test` 和 `expect` 函数)
 
 ### 4. 更新后的 package.json 结构
 
@@ -51,6 +52,7 @@ NPM_VERSION = "10"
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "@testing-library/react": "^16.2.0",
+    "@types/jest": "^29.5.0",
     "typescript": "^5.1.6",
     "vite": "~5.2.0",
     "@vitejs/plugin-legacy": "^5.0.0",
@@ -123,6 +125,7 @@ dist/assets/index-Dz_gwlJV.js           919.61 kB │ gzip: 218.80 kB
 - [x] Vite 移动到 dependencies
 - [x] React 类型定义移动到 dependencies
 - [x] 测试库类型定义移动到 dependencies
+- [x] Jest 类型定义移动到 dependencies
 - [x] 本地构建测试通过
 - [x] 配置文件语法正确
 - [x] 部署脚本更新
@@ -132,7 +135,7 @@ dist/assets/index-Dz_gwlJV.js           919.61 kB │ gzip: 218.80 kB
 1. **推送更改到 Git**
    ```bash
    git add .
-   git commit -m "Fix Netlify deployment: upgrade Node.js to 20, move build deps and type definitions"
+   git commit -m "Fix Netlify deployment: upgrade Node.js to 20, move build deps and all type definitions"
    git push origin main
    ```
 
@@ -151,6 +154,7 @@ dist/assets/index-Dz_gwlJV.js           919.61 kB │ gzip: 218.80 kB
 - ✅ 无 Node.js 版本警告
 - ✅ TypeScript 编译正常
 - ✅ 类型声明问题解决
+- ✅ 测试文件类型定义问题解决
 - ✅ Vite 构建输出正确
 - ✅ 网站正常访问
 - ✅ 移动端功能正常
