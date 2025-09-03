@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -21,7 +21,9 @@ import {
   IonBadge,
   IonRefresher,
   IonRefresherContent,
-  RefresherEventDetail
+  RefresherEventDetail,
+  IonSpinner,
+  IonAlert
 } from '@ionic/react';
 import {
   trendingUpOutline,
@@ -33,27 +35,71 @@ import {
   notificationsOutline,
   timeOutline
 } from 'ionicons/icons';
+import { apiService } from '../services/api';
 import './HomePage.css';
 
 const HomePage: React.FC = () => {
-  // 模拟数据
-  const marketData = [
-    { symbol: 'BTC', price: '$43,250', change: '+2.5%', trend: 'up' },
-    { symbol: 'ETH', price: '$2,680', change: '-1.2%', trend: 'down' },
-    { symbol: 'BNB', price: '$315', change: '+0.8%', trend: 'up' },
-    { symbol: 'ADA', price: '$0.45', change: '+3.1%', trend: 'up' }
-  ];
+  // 状态管理
+  const [marketData, setMarketData] = useState<any[]>([]);
+  const [latestSignals, setLatestSignals] = useState<any[]>([]);
+  const [systemStatus, setSystemStatus] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const latestSignals = [
-    { symbol: 'BTCUSDT', type: 'buy', strength: 'strong', time: '2分钟前' },
-    { symbol: 'ETHUSDT', type: 'hold', strength: 'medium', time: '5分钟前' },
-    { symbol: 'BNBUSDT', type: 'sell', strength: 'strong', time: '8分钟前' }
-  ];
+  // 加载数据
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
-    setTimeout(() => {
-      event.detail.complete();
-    }, 2000);
+      // 并行加载数据
+      const [marketStateResult, signalsResult, statusResult] = await Promise.all([
+        apiService.getMarketState('BTCUSDT'),
+        apiService.getTradingSignals('BTCUSDT', 3),
+        apiService.getSystemStatus()
+      ]);
+
+      // 处理市场数据
+      if (marketStateResult && marketStateResult.length > 0) {
+        const market = marketStateResult[0] as any;
+        setMarketData([{
+          symbol: 'BTC',
+          price: `$${market.price?.toFixed(2) || '0'}`,
+          change: `${market.change_24h?.toFixed(2) || '0'}%`,
+          trend: market.change_24h > 0 ? 'up' : 'down'
+        }]);
+      }
+
+      // 处理交易信号
+      if (signalsResult && signalsResult.length > 0) {
+        setLatestSignals(signalsResult.map((signal: any) => ({
+          symbol: signal.symbol,
+          type: signal.signal_type?.toLowerCase() || 'hold',
+          strength: signal.confidence > 70 ? 'strong' : signal.confidence > 40 ? 'medium' : 'weak',
+          time: new Date(signal.timestamp * 1000).toLocaleString('zh-CN')
+        })));
+      }
+
+      // 处理系统状态
+      setSystemStatus(statusResult);
+
+    } catch (err) {
+      console.error('加载数据失败:', err);
+      setError('加载数据失败，请检查网络连接');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 组件挂载时加载数据
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // 下拉刷新
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await loadData();
+    event.detail.complete();
   };
 
   const getTrendIcon = (trend: string) => {
@@ -99,6 +145,23 @@ const HomePage: React.FC = () => {
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
+
+        {/* 错误提示 */}
+        <IonAlert
+          isOpen={!!error}
+          onDidDismiss={() => setError(null)}
+          header="错误"
+          message={error || ''}
+          buttons={['确定']}
+        />
+
+        {/* 加载状态 */}
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <IonSpinner name="crescent" />
+            <p>加载中...</p>
+          </div>
+        )}
 
         {/* 用户状态卡片 */}
         <IonCard>

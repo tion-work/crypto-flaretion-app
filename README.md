@@ -78,13 +78,13 @@ npm run preview
 ### API端点
 前端默认连接到 `http://localhost:8000`，支持以下API端点：
 
-- `GET /api/v1/klines` - 获取K线数据
-- `GET /api/v1/signals` - 获取交易信号
-- `GET /api/v1/market-state` - 获取市场状态
-- `GET /api/v1/strategies` - 获取策略数据
-- `GET /api/v1/analysis` - 获取分析结果
-- `GET /api/v1/status` - 获取系统状态
-- `GET /api/v1/health` - 健康检查
+- `GET /api/klines` - 获取K线数据
+- `GET /api/signals` - 获取交易信号
+- `GET /api/market-state` - 获取市场状态
+- `GET /api/strategies` - 获取策略数据
+- `GET /api/analysis` - 获取分析结果
+- `GET /api/status` - 获取系统状态
+- `GET /api/health` - 健康检查
 
 ### 修改API地址
 1. 在个人中心设置页面中修改"API基础URL"

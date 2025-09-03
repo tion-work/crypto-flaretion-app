@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -23,7 +23,9 @@ import {
   IonSelectOption,
   IonItem,
   IonList,
-  IonBadge
+  IonBadge,
+  IonSpinner,
+  IonAlert
 } from '@ionic/react';
 import {
   analyticsOutline,
@@ -36,11 +38,36 @@ import {
   timeOutline,
   speedometerOutline
 } from 'ionicons/icons';
+import { apiService } from '../services/api';
 import './AnalysisPage.css';
 
 const AnalysisPage: React.FC = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState('5m');
   const [selectedSymbol, setSelectedSymbol] = useState('BTCUSDT');
+  const [analysisData, setAnalysisData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 加载分析数据
+  const loadAnalysis = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = await apiService.getAnalysis();
+      setAnalysisData(data);
+    } catch (err) {
+      console.error('加载分析数据失败:', err);
+      setError('加载分析数据失败，请检查网络连接');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 组件挂载时加载数据
+  useEffect(() => {
+    loadAnalysis();
+  }, []);
 
   // 模拟RSI数据
   const rsiData = {
@@ -122,6 +149,23 @@ const AnalysisPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        {/* 错误提示 */}
+        <IonAlert
+          isOpen={!!error}
+          onDidDismiss={() => setError(null)}
+          header="错误"
+          message={error || ''}
+          buttons={['确定']}
+        />
+
+        {/* 加载状态 */}
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <IonSpinner name="crescent" />
+            <p>加载分析数据中...</p>
+          </div>
+        )}
+
         {/* 选择器 */}
         <IonCard>
           <IonCardContent>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -27,7 +27,9 @@ import {
   IonModal,
   IonButton as IonModalButton,
   IonButtons,
-  IonBackButton
+  IonBackButton,
+  IonSpinner,
+  IonAlert
 } from '@ionic/react';
 import {
   addOutline,
@@ -42,14 +44,39 @@ import {
   checkmarkCircleOutline,
   closeCircleOutline
 } from 'ionicons/icons';
+import { apiService } from '../services/api';
 import './StrategyPage.css';
 
 const StrategyPage: React.FC = () => {
   const [selectedSegment, setSelectedSegment] = useState('my');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [strategies, setStrategies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 模拟策略数据
-  const strategies = [
+  // 加载策略数据
+  const loadStrategies = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const strategiesData = await apiService.getStrategies();
+      setStrategies(strategiesData || []);
+    } catch (err) {
+      console.error('加载策略数据失败:', err);
+      setError('加载策略数据失败，请检查网络连接');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 组件挂载时加载数据
+  useEffect(() => {
+    loadStrategies();
+  }, []);
+
+  // 模拟策略数据（作为备用）
+  const mockStrategies = [
     {
       id: 1,
       name: 'RSI多周期共振策略',
@@ -162,6 +189,23 @@ const StrategyPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        {/* 错误提示 */}
+        <IonAlert
+          isOpen={!!error}
+          onDidDismiss={() => setError(null)}
+          header="错误"
+          message={error || ''}
+          buttons={['确定']}
+        />
+
+        {/* 加载状态 */}
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <IonSpinner name="crescent" />
+            <p>加载策略数据中...</p>
+          </div>
+        )}
+
         {/* 搜索栏 */}
         <IonSearchbar placeholder="搜索策略..." />
 
@@ -183,7 +227,7 @@ const StrategyPage: React.FC = () => {
 
         {/* 策略列表 */}
         <IonList>
-          {strategies.map((strategy) => (
+          {(strategies.length > 0 ? strategies : mockStrategies).map((strategy) => (
             <IonCard key={strategy.id} className="strategy-card">
               <IonCardHeader>
                 <IonCardTitle>
@@ -211,32 +255,30 @@ const StrategyPage: React.FC = () => {
                   <IonRow>
                     <IonCol size="6">
                       <div className="strategy-info">
-                        <IonLabel>🎯 适用: {strategy.symbols.join(', ')}</IonLabel>
+                        <IonLabel>🎯 类型: {strategy.type || 'N/A'}</IonLabel>
                       </div>
                     </IonCol>
                     <IonCol size="6">
                       <div className="strategy-info">
-                        <IonLabel>⏰ 周期: {strategy.timeframes.join(', ')}</IonLabel>
+                        <IonLabel>⏰ 周期: {strategy.timeframe || 'N/A'}</IonLabel>
                       </div>
                     </IonCol>
                   </IonRow>
                   <IonRow>
                     <IonCol size="4">
                       <div className="strategy-metric">
-                        <IonLabel>📊 胜率: {strategy.winRate}%</IonLabel>
+                        <IonLabel>📊 胜率: {strategy.performance?.win_rate || strategy.winRate || 'N/A'}%</IonLabel>
                       </div>
                     </IonCol>
                     <IonCol size="4">
                       <div className="strategy-metric">
-                        <IonLabel>⚡ 今日: {strategy.todaySignals}信号</IonLabel>
+                        <IonLabel>💰 收益率: {strategy.performance?.profit_rate || 'N/A'}%</IonLabel>
                       </div>
                     </IonCol>
                     <IonCol size="4">
                       <div className="strategy-metric">
                         <IonLabel>
-                          {strategy.lastSignal.type === 'buy' ? '🟢' : 
-                           strategy.lastSignal.type === 'sell' ? '🔴' : '🟡'} 
-                          最后信号: {strategy.lastSignal.symbol} {strategy.lastSignal.type === 'buy' ? '买入' : strategy.lastSignal.type === 'sell' ? '卖出' : '观望'}
+                          📉 最大回撤: {strategy.performance?.max_drawdown || 'N/A'}%
                         </IonLabel>
                       </div>
                     </IonCol>
@@ -247,13 +289,13 @@ const StrategyPage: React.FC = () => {
                   <IonButton 
                     fill="outline" 
                     size="small"
-                    color={strategy.status === 'active' ? 'warning' : 'success'}
+                    color={strategy.status === 'ACTIVE' ? 'warning' : 'success'}
                   >
                     <IonIcon 
-                      icon={strategy.status === 'active' ? pauseOutline : playOutline} 
+                      icon={strategy.status === 'ACTIVE' ? pauseOutline : playOutline} 
                       slot="start" 
                     />
-                    {strategy.status === 'active' ? '暂停' : '启动'}
+                    {strategy.status === 'ACTIVE' ? '暂停' : '启动'}
                   </IonButton>
                   <IonButton fill="outline" size="small" color="primary">
                     <IonIcon icon={settingsOutline} slot="start" />

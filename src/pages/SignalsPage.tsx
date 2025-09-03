@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -26,7 +26,9 @@ import {
   IonRefresherContent,
   RefresherEventDetail,
   IonToggle,
-  IonItemDivider
+  IonItemDivider,
+  IonSpinner,
+  IonAlert
 } from '@ionic/react';
 import {
   notificationsOutline,
@@ -41,14 +43,45 @@ import {
   trendingDownOutline,
   pauseOutline
 } from 'ionicons/icons';
+import { apiService } from '../services/api';
 import './SignalsPage.css';
 
 const SignalsPage: React.FC = () => {
   const [selectedSegment, setSelectedSegment] = useState('realtime');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [signals, setSignals] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 模拟信号数据
-  const signals = [
+  // 加载信号数据
+  const loadSignals = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const signalsData = await apiService.getTradingSignals('BTCUSDT', 20);
+      setSignals(signalsData || []);
+    } catch (err) {
+      console.error('加载信号数据失败:', err);
+      setError('加载信号数据失败，请检查网络连接');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 组件挂载时加载数据
+  useEffect(() => {
+    loadSignals();
+  }, []);
+
+  // 下拉刷新
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await loadSignals();
+    event.detail.complete();
+  };
+
+  // 模拟信号数据（作为备用）
+  const mockSignals = [
     {
       id: 1,
       symbol: 'BTCUSDT',
@@ -150,13 +183,9 @@ const SignalsPage: React.FC = () => {
     }
   };
 
-  const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
-    setTimeout(() => {
-      event.detail.complete();
-    }, 2000);
-  };
 
-  const filteredSignals = signals.filter(signal => {
+
+  const filteredSignals = (signals.length > 0 ? signals : mockSignals).filter(signal => {
     switch (selectedSegment) {
       case 'realtime':
         return signal.status === 'new';
@@ -185,6 +214,23 @@ const SignalsPage: React.FC = () => {
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
+
+        {/* 错误提示 */}
+        <IonAlert
+          isOpen={!!error}
+          onDidDismiss={() => setError(null)}
+          header="错误"
+          message={error || ''}
+          buttons={['确定']}
+        />
+
+        {/* 加载状态 */}
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <IonSpinner name="crescent" />
+            <p>加载信号数据中...</p>
+          </div>
+        )}
 
         {/* 信号分类 */}
         <IonSegment 

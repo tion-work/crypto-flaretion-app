@@ -1,5 +1,6 @@
 // API服务 - 用于连接Gin后端
-const API_BASE_URL = 'http://localhost:8000';
+// 从环境变量获取API地址
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export interface KlineData {
   symbol: string;
@@ -41,7 +42,7 @@ class ApiService {
   // 获取K线数据
   async getKlineData(symbol: string, interval: string, limit: number = 100): Promise<KlineData[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
+      const response = await fetch(`${this.baseUrl}/api/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -55,7 +56,7 @@ class ApiService {
   // 获取交易信号
   async getTradingSignals(symbol: string, limit: number = 50): Promise<TradingSignal[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/signals?symbol=${symbol}&limit=${limit}`);
+      const response = await fetch(`${this.baseUrl}/api/signals?symbol=${symbol}&limit=${limit}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -69,7 +70,7 @@ class ApiService {
   // 获取市场状态
   async getMarketState(symbol: string): Promise<MarketState[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/market-state?symbol=${symbol}`);
+      const response = await fetch(`${this.baseUrl}/api/market-state?symbol=${symbol}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -83,7 +84,7 @@ class ApiService {
   // 获取系统状态
   async getSystemStatus(): Promise<any> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/status`);
+      const response = await fetch(`${this.baseUrl}/api/status`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -94,10 +95,40 @@ class ApiService {
     }
   }
 
+  // 获取策略数据
+  async getStrategies(): Promise<any[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/strategies`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      return result.data || result;
+    } catch (error) {
+      console.error('获取策略数据失败:', error);
+      throw error;
+    }
+  }
+
+  // 获取分析结果
+  async getAnalysis(): Promise<any> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/analysis`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      return result.data || result;
+    } catch (error) {
+      console.error('获取分析结果失败:', error);
+      throw error;
+    }
+  }
+
   // 测试连接
   async testConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/health`);
+      const response = await fetch(`${this.baseUrl}/api/health`);
       return response.ok;
     } catch (error) {
       console.error('连接测试失败:', error);
