@@ -1,0 +1,128 @@
+/* HomePage 样式 */
+
+.market-card {
+  margin: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.coin-info {
+  text-align: center;
+  padding: 8px;
+}
+
+.coin-symbol {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin-bottom: 4px;
+}
+
+.coin-price {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.coin-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.coin-change ion-icon {
+  margin-right: 2px;
+  font-size: 14px;
+}
+
+.market-status {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.market-status ion-chip {
+  --background: var(--ion-color-warning);
+  --color: var(--ion-color-warning-contrast);
+}
+
+/* 快速操作按钮样式 */
+ion-button[fill="outline"] {
+  --border-width: 1px;
+  --border-color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+  height: 60px;
+  font-size: 12px;
+}
+
+ion-button[fill="outline"] ion-icon {
+  margin-bottom: 4px;
+}
+
+/* 信号列表样式 */
+ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 16px;
+}
+
+ion-item h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+ion-item p {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+ion-badge {
+  margin-left: 8px;
+  font-size: 10px;
+}
+
+/* 用户状态卡片样式 */
+ion-chip {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  font-size: 12px;
+  height: 32px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .coin-info {
+    padding: 4px;
+  }
+  
+  .coin-symbol {
+    font-size: 12px;
+  }
+  
+  .coin-price {
+    font-size: 14px;
+  }
+  
+  .coin-change {
+    font-size: 10px;
+  }
+  
+  ion-button[fill="outline"] {
+    height: 50px;
+    font-size: 10px;
+  }
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .market-card {
+    --background: var(--ion-color-step-50);
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  }
+  
+  .coin-symbol {
+    color: var(--ion-color-primary-tint);
+  }
+}

@@ -11,13 +11,17 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { 
-  trendingUpOutline, 
-  serverOutline, 
-  settingsOutline 
+  homeOutline,
+  barChartOutline,
+  analyticsOutline,
+  notificationsOutline,
+  personOutline
 } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import HomePage from './pages/HomePage';
+import StrategyPage from './pages/StrategyPage';
+import AnalysisPage from './pages/AnalysisPage';
+import SignalsPage from './pages/SignalsPage';
+import ProfilePage from './pages/ProfilePage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -56,31 +60,45 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
+          <Route exact path="/home">
+            <HomePage />
           </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
+          <Route exact path="/strategy">
+            <StrategyPage />
           </Route>
-          <Route path="/tab3">
-            <Tab3 />
+          <Route exact path="/analysis">
+            <AnalysisPage />
+          </Route>
+          <Route exact path="/signals">
+            <SignalsPage />
+          </Route>
+          <Route exact path="/profile">
+            <ProfilePage />
           </Route>
           <Route exact path="/">
-            <Redirect to="/tab1" />
+            <Redirect to="/home" />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon aria-hidden="true" icon={trendingUpOutline} />
-            <IonLabel>交易监控</IonLabel>
+          <IonTabButton tab="home" href="/home">
+            <IonIcon aria-hidden="true" icon={homeOutline} />
+            <IonLabel>首页</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon aria-hidden="true" icon={serverOutline} />
-            <IonLabel>系统监控</IonLabel>
+          <IonTabButton tab="strategy" href="/strategy">
+            <IonIcon aria-hidden="true" icon={barChartOutline} />
+            <IonLabel>策略</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={settingsOutline} />
-            <IonLabel>设置</IonLabel>
+          <IonTabButton tab="analysis" href="/analysis">
+            <IonIcon aria-hidden="true" icon={analyticsOutline} />
+            <IonLabel>分析</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="signals" href="/signals">
+            <IonIcon aria-hidden="true" icon={notificationsOutline} />
+            <IonLabel>信号</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="profile" href="/profile">
+            <IonIcon aria-hidden="true" icon={personOutline} />
+            <IonLabel>我的</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

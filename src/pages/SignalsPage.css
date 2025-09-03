@@ -1,0 +1,245 @@
+/* SignalsPage 样式 */
+
+.signal-card {
+  margin: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--ion-color-primary);
+}
+
+.signal-card.new {
+  border-left-color: var(--ion-color-success);
+  background: var(--ion-color-success-tint);
+}
+
+.signal-card.read {
+  opacity: 0.8;
+}
+
+.signal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.signal-main {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.signal-icon {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.signal-info {
+  flex: 1;
+}
+
+.signal-symbol {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin-bottom: 4px;
+}
+
+.signal-type {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--ion-color-dark);
+}
+
+.signal-type ion-badge {
+  margin-left: 8px;
+  font-size: 10px;
+}
+
+.signal-time {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+}
+
+.signal-time ion-icon {
+  margin-right: 4px;
+  font-size: 14px;
+}
+
+.signal-details {
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+}
+
+.detail-item ion-icon {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.signal-conditions {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.signal-conditions ion-chip {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  font-size: 11px;
+  height: 28px;
+}
+
+.signal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.signal-actions ion-button {
+  --border-radius: 8px;
+  height: 32px;
+  font-size: 12px;
+}
+
+/* 统计项样式 */
+.stat-item {
+  text-align: center;
+  padding: 16px 8px;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+}
+
+/* 空状态样式 */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ion-color-medium);
+}
+
+.empty-state ion-icon {
+  margin-bottom: 16px;
+  color: var(--ion-color-medium);
+}
+
+.empty-state p {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+/* 分段控制器样式 */
+ion-segment {
+  --background: var(--ion-color-light);
+  border-radius: 8px;
+  margin: 16px;
+}
+
+ion-segment-button {
+  --color: var(--ion-color-medium);
+  --color-checked: var(--ion-color-primary);
+  --background-checked: var(--ion-color-primary-tint);
+  --border-radius: 8px;
+  font-size: 12px;
+}
+
+/* 通知设置样式 */
+ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-toggle {
+  --handle-background: var(--ion-color-primary);
+  --background: var(--ion-color-light);
+  --background-checked: var(--ion-color-primary-tint);
+}
+
+/* 徽章样式 */
+ion-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .signal-card {
+    margin: 8px;
+  }
+  
+  .signal-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .signal-time {
+    margin-top: 8px;
+    align-self: flex-end;
+  }
+  
+  .signal-symbol {
+    font-size: 16px;
+  }
+  
+  .signal-type {
+    font-size: 13px;
+  }
+  
+  .signal-actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .signal-actions ion-button {
+    width: 100%;
+    height: 36px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .signal-card {
+    --background: var(--ion-color-step-50);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+  
+  .signal-card.new {
+    background: var(--ion-color-success-shade);
+  }
+  
+  .stat-item {
+    background: var(--ion-color-step-100);
+  }
+  
+  .signal-conditions ion-chip {
+    --background: var(--ion-color-step-100);
+    --color: var(--ion-color-light);
+  }
+}
