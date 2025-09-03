@@ -3,6 +3,7 @@
 # Ionic React App Netlify 部署脚本
 
 echo "🚀 开始部署 Ionic React App 到 Netlify..."
+echo "📋 使用 Node.js 20 和 NPM 10"
 
 # 检查是否安装了 Netlify CLI
 if ! command -v netlify &> /dev/null; then
