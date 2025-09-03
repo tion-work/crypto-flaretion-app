@@ -1,6 +1,6 @@
 {
-  "short_name": "Flaretion",
-  "name": "Flaretion - 智能策略分析平台",
+  "short_name": "智能策略",
+  "name": "智能策略分析平台",
   "description": "基于多周期RSI共振分析的专业策略平台，为交易者提供精准的市场状态判断和智能信号提醒",
   "version": "1.0.0",
   "icons": [
