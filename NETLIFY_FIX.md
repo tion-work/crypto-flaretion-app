@@ -5,6 +5,7 @@
 Netlify 部署失败，主要错误：
 1. **Node.js 版本不兼容** - Capacitor 7.4.3 需要 Node.js 20+
 2. **TypeScript 命令找不到** - `tsc: not found`
+3. **TypeScript 类型声明缺失** - 测试文件和React类型定义问题
 
 ## 修复方案
 
@@ -32,12 +33,24 @@ NPM_VERSION = "10"
 - `@vitejs/plugin-legacy`
 - `@vitejs/plugin-react`
 
-### 3. 更新后的 package.json 结构
+### 3. 修复 TypeScript 类型声明问题
+
+**问题:** 测试文件和React类型定义在 `devDependencies` 中，TypeScript编译时找不到
+
+**修复:** 将以下类型定义移动到 `dependencies`:
+- `@types/react`
+- `@types/react-dom`
+- `@testing-library/react`
+
+### 4. 更新后的 package.json 结构
 
 ```json
 {
   "dependencies": {
     // ... 其他依赖
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "@testing-library/react": "^16.2.0",
     "typescript": "^5.1.6",
     "vite": "~5.2.0",
     "@vitejs/plugin-legacy": "^5.0.0",
@@ -45,7 +58,8 @@ NPM_VERSION = "10"
   },
   "devDependencies": {
     // 测试和开发工具保留在 devDependencies
-    "@testing-library/...": "...",
+    "@testing-library/dom": ">=7.21.4",
+    "@testing-library/jest-dom": "^5.16.5",
     "cypress": "^13.5.0",
     "eslint": "^9.20.1",
     // ...
@@ -107,6 +121,8 @@ dist/assets/index-Dz_gwlJV.js           919.61 kB │ gzip: 218.80 kB
 - [x] NPM 版本升级到 10
 - [x] TypeScript 移动到 dependencies
 - [x] Vite 移动到 dependencies
+- [x] React 类型定义移动到 dependencies
+- [x] 测试库类型定义移动到 dependencies
 - [x] 本地构建测试通过
 - [x] 配置文件语法正确
 - [x] 部署脚本更新
@@ -116,7 +132,7 @@ dist/assets/index-Dz_gwlJV.js           919.61 kB │ gzip: 218.80 kB
 1. **推送更改到 Git**
    ```bash
    git add .
-   git commit -m "Fix Netlify deployment: upgrade Node.js to 20 and move build deps"
+   git commit -m "Fix Netlify deployment: upgrade Node.js to 20, move build deps and type definitions"
    git push origin main
    ```
 
@@ -134,6 +150,7 @@ dist/assets/index-Dz_gwlJV.js           919.61 kB │ gzip: 218.80 kB
 - ✅ 构建成功完成
 - ✅ 无 Node.js 版本警告
 - ✅ TypeScript 编译正常
+- ✅ 类型声明问题解决
 - ✅ Vite 构建输出正确
 - ✅ 网站正常访问
 - ✅ 移动端功能正常
